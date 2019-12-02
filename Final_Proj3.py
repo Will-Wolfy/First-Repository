@@ -4,6 +4,9 @@ from tkinter import messagebox
 import tkinter
 import random
 import webbrowser
+import time
+
+
 
 #creates window
 root= tkinter.Tk()
@@ -29,7 +32,6 @@ Name_entry.pack()
 # defines Enter_name function
 def Enter_name():
     Name = Name_entry.get()
-    print(Name)
 
 #Create Enter button
 Enter_Button = tkinter.Button(root, text = "Enter", font = ('Helvetica, 20'), command = Enter_name)
@@ -43,6 +45,8 @@ def Manual():
 Manual_Button = tkinter.Button(root, text = "Puzzle Manual", fg = ('Red'), font = ('Helvetica', 80), command = Manual)
 Manual_Button.pack(side='bottom')
 
+
+
 #defines start game function that runs when start button is clicked
 def Start_game():
     Game= tkinter.Tk()
@@ -53,12 +57,35 @@ def Start_game():
     Game_title = tkinter.Label(Game, text = "Finish the puzzle as fast as possible", font = ('Helvetica', 85))
     Game_title.pack()
 
-    #creates time left function
-    
+    #defines the first Game
+    def colorgame():
+        color_values: ['blue', 'yellow', 'green', 'black', 'red', 'purple', 'orange']
+        Game_entry= tkinter.Entry(Game, bd=50, font = ('Helvetica', 50))
+        Game_entry.pack(side = 'bottom')
+        Color_word= tkinter.Label(Game, text= color_values[random.randint(1,9)], fg = color_values[random.randint(1,9)], font= ('Helvetica', 50))
+
+    colorgame()
+
+
+    timeleft= 30
     #creates time left label
-    time_left = 30
-    time_title = tkinter.Label(Game, text = 'Time left :' + Str(timeleft), font= ('Helvetica', 20))
+    time_title = tkinter.Label(Game, text = 'Time left : ' + str(timeleft) + ' seconds', font= ('Helvetica', 50))
     time_title.pack()
+    #defines the again function
+    def again(timeleft):
+        timeleft-=1
+        time_title.config(text='Time left : ' + str(timeleft) + ' seconds')
+        if timeleft> 0:
+            countdown(timeleft)
+    #defines countdown function
+    def countdown(timeleft):
+        time_title.after(1000,again, timeleft)
+
+    #runs countdown
+    countdown(30)
+
+    Game.mainloop()
+
 
 
 #Creates Start Button
@@ -72,4 +99,3 @@ Start_Button.pack(side='bottom')
 
 #Run the GUI
 root.mainloop()
-Game.mainloop()
