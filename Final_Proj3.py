@@ -4,9 +4,10 @@ from tkinter import messagebox
 import tkinter
 import random
 import webbrowser
-import time
 
-
+#Sets words left and strike variable
+wordsleft = 10
+strikes = 0
 
 #creates window
 root= tkinter.Tk()
@@ -57,17 +58,56 @@ def Start_game():
     Game_title = tkinter.Label(Game, text = "Finish the puzzle as fast as possible", font = ('Helvetica', 85))
     Game_title.pack()
 
-    #defines the first Game
+    # defines the first Game function
     def colorgame():
-        color_values: ['blue', 'yellow', 'green', 'black', 'red', 'purple', 'orange']
+        #creates the list of colors
+        color_values = ['Blue', 'Yellow', 'Green', 'Black', 'Red', 'Purple', 'Orange']
+
+        #creates the entry box
         Game_entry= tkinter.Entry(Game, bd=50, font = ('Helvetica', 50))
         Game_entry.pack(side = 'bottom')
-        Color_word= tkinter.Label(Game, text= color_values[random.randint(1,9)], fg = color_values[random.randint(1,9)], font= ('Helvetica', 50))
+
+        #defines the word maker
+        def word_maker():
+            #selects words from list
+            word = random.choice(color_values)
+            wordcolor= random.choice(color_values)
+
+            #creates word label
+            Game_word = tkinter.Label(Game, text = word, fg = wordcolor, font = ('Helvetica', 200))
+            Game_word.pack(side = 'bottom')
+
+        #creates strike indication widget
+        Strike_X = tkinter.Label(Game, text = 'X', fg = 'Red', font = ('Helvetica', 50))
+
+        #defines check entry function
+
+        def check_entry(arg):
+            global wordsleft
+            global strikes
+            color_game_entry = Game_entry.get()
+            wordsleft-=1
+            if wordcolor == str(color_game_entry):
+                word_maker()
+                if wordsleft == 0:
+                    You_Win= tkinter.Tk()
+                    You_Win.title("You Win!")
+                    You_Win.geometry("1400x700")
+                    Congrats = tkinter.Label(You_Win, text= 'Congratulations, You Win!', font = ('Helvetica'))
+            else:
+                Strike_X.pack(side='left')
+                strikes += 1
+                if strike == 3:
+                    webbrowser.open('https://www.youtube.com/watch?v=NIPNf6HVefM')
+
+        #binds the check_entry functoin to return
+        Game.bind('<Return>', check_entry)
+        word_maker()
 
     colorgame()
 
-
-    timeleft= 30
+    #creates timeleft var
+    timeleft= 60
     #creates time left label
     time_title = tkinter.Label(Game, text = 'Time left : ' + str(timeleft) + ' seconds', font= ('Helvetica', 50))
     time_title.pack()
@@ -75,14 +115,16 @@ def Start_game():
     def again(timeleft):
         timeleft-=1
         time_title.config(text='Time left : ' + str(timeleft) + ' seconds')
-        if timeleft> 0:
+        if timeleft> 1:
             countdown(timeleft)
+        else:
+            webbrowser.open('https://www.youtube.com/watch?v=NIPNf6HVefM')
     #defines countdown function
     def countdown(timeleft):
         time_title.after(1000,again, timeleft)
 
     #runs countdown
-    countdown(30)
+    countdown(60)
 
     Game.mainloop()
 
